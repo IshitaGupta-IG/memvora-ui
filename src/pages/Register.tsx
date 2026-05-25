@@ -20,9 +20,13 @@ export default function Register() {
     setLoading(true);
 
     try {
-      await signUp(email, password);
-      setMessage("Account created. You can sign in now.");
-      setTimeout(() => navigate("/login"), 900);
+      const result = await signUp(email, password);
+      if (result.needsEmailConfirmation) {
+        setMessage("Check your email for the Memvora confirmation link, then sign in.");
+      } else {
+        setMessage("Account created. You can sign in now.");
+        setTimeout(() => navigate("/login"), 900);
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not create account.");
     } finally {

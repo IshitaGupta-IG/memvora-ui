@@ -49,3 +49,18 @@ Add the frontend environment variables in Railway before deploying.
 Memvora supports temporary guest access through Supabase anonymous auth. Enable it in Supabase before using the "Continue as guest" button:
 
 Supabase Dashboard -> Authentication -> Sign In / Providers -> Anonymous sign-ins.
+
+## Supabase Confirmation Email Branding
+
+Email confirmation is sent by Supabase when a user registers. The frontend sets the confirmation redirect back to Memvora and sends `app_name: "Memvora"` as signup metadata.
+
+To make the email itself show Memvora:
+
+1. Supabase Dashboard -> Authentication -> Emails / Templates.
+2. Update the confirmation email subject to `Confirm your Memvora account`.
+3. Update the template copy to use the Memvora name.
+4. Supabase Dashboard -> Project Settings -> Authentication -> URL Configuration.
+5. Set Site URL to your deployed Memvora UI URL.
+6. Add your deployed Memvora UI URL to Redirect URLs.
+
+If you want the From address to use your domain instead of Supabase's default mailer, configure custom SMTP in Supabase.
