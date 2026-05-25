@@ -50,6 +50,8 @@ Memvora supports temporary guest access through Supabase anonymous auth. Enable 
 
 Supabase Dashboard -> Authentication -> Sign In / Providers -> Anonymous sign-ins.
 
+If anonymous auth is disabled, the UI falls back to a temporary generated email/password account. That fallback only works when Supabase email confirmation is disabled for temporary demo accounts.
+
 ## Supabase Confirmation Email Branding
 
 Email confirmation is sent by Supabase when a user registers. The frontend sets the confirmation redirect back to Memvora and sends `app_name: "Memvora"` as signup metadata.

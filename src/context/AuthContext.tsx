@@ -46,7 +46,29 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       },
       signInAsGuest: async () => {
         const { error } = await supabase.auth.signInAnonymously();
-        if (error) throw error;
+        if (!error) return;
+
+        const anonymousDisabled = error.message.toLowerCase().includes("anonymous sign-ins are disabled");
+        if (!anonymousDisabled) throw error;
+
+        const guestId = crypto.randomUUID();
+        const email = `guest-${guestId}@guest.memvora.app`;
+        const password = crypto.randomUUID() + crypto.randomUUID();
+        const { data, error: signUpError } = await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            data: {
+              app_name: "Memvora",
+              is_guest: true,
+            },
+          },
+        });
+
+        if (signUpError) throw signUpError;
+        if (!data.session) {
+          throw new Error("Guest access needs anonymous sign-ins enabled in Supabase, or email confirmation disabled for temporary demo accounts.");
+        }
       },
       signUp: async (email, password) => {
         const { data, error } = await supabase.auth.signUp({
