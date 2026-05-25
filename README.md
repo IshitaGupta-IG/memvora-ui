@@ -1,6 +1,8 @@
-# Memvora Frontend
+# Memvora UI
 
 React frontend for Memvora, a modern AI memory vault.
+
+GitHub repository: `IshitaGupta-IG/memvora-ui`
 
 ## Setup
 
@@ -41,4 +43,3 @@ npm run preview -- --host 0.0.0.0 --port $PORT
 ```
 
 Add the frontend environment variables in Railway before deploying.
-
