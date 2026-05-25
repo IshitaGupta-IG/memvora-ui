@@ -43,3 +43,9 @@ npm run preview -- --host 0.0.0.0 --port $PORT
 ```
 
 Add the frontend environment variables in Railway before deploying.
+
+## Guest Sign In
+
+Memvora supports temporary guest access through Supabase anonymous auth. Enable it in Supabase before using the "Continue as guest" button:
+
+Supabase Dashboard -> Authentication -> Sign In / Providers -> Anonymous sign-ins.

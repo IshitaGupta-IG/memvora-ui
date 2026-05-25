@@ -6,7 +6,7 @@ import { useAuth } from "../context/AuthContext";
 
 export default function Register() {
   const navigate = useNavigate();
-  const { signUp } = useAuth();
+  const { signInAsGuest, signUp } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
@@ -25,6 +25,21 @@ export default function Register() {
       setTimeout(() => navigate("/login"), 900);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not create account.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function handleGuestSignIn() {
+    setError("");
+    setMessage("");
+    setLoading(true);
+
+    try {
+      await signInAsGuest();
+      navigate("/");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Could not start a guest session.");
     } finally {
       setLoading(false);
     }
@@ -66,6 +81,16 @@ export default function Register() {
           </button>
         </form>
 
+        <div className="my-5 flex items-center gap-3">
+          <div className="h-px flex-1 bg-slate-200" />
+          <span className="text-xs font-medium uppercase text-slate-400">or</span>
+          <div className="h-px flex-1 bg-slate-200" />
+        </div>
+
+        <button className="button-secondary w-full" onClick={handleGuestSignIn} disabled={loading}>
+          {loading ? "Starting guest session..." : "Continue as guest"}
+        </button>
+
         <p className="mt-6 text-center text-sm text-slate-500">
           Already have an account?{" "}
           <Link to="/login" className="font-semibold text-brand-700">
@@ -76,4 +101,3 @@ export default function Register() {
     </main>
   );
 }
-

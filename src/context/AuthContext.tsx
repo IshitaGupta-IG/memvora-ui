@@ -8,6 +8,7 @@ type AuthContextValue = {
   user: User | null;
   loading: boolean;
   signIn: (email: string, password: string) => Promise<void>;
+  signInAsGuest: () => Promise<void>;
   signUp: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
 };
@@ -43,6 +44,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
       },
+      signInAsGuest: async () => {
+        const { error } = await supabase.auth.signInAnonymously();
+        if (error) throw error;
+      },
       signUp: async (email, password) => {
         const { error } = await supabase.auth.signUp({ email, password });
         if (error) throw error;
@@ -65,4 +70,3 @@ export function useAuth() {
   }
   return context;
 }
-

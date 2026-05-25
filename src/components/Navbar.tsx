@@ -4,6 +4,7 @@ import { useAuth } from "../context/AuthContext";
 
 export default function Navbar() {
   const { signOut, user } = useAuth();
+  const displayName = user?.email || "Guest session";
 
   return (
     <header className="border-b border-slate-200 bg-white">
@@ -18,7 +19,7 @@ export default function Navbar() {
           </div>
         </div>
         <div className="flex items-center gap-3">
-          <span className="hidden text-sm text-slate-500 sm:inline">{user?.email}</span>
+          <span className="hidden text-sm text-slate-500 sm:inline">{displayName}</span>
           <button className="button-secondary py-2" onClick={signOut} title="Sign out">
             <LogOut size={17} />
             <span className="hidden sm:inline">Sign out</span>
@@ -28,4 +29,3 @@ export default function Navbar() {
     </header>
   );
 }
-
