@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Sparkles } from "lucide-react";
 
 import ChatWindow from "../components/ChatWindow";
 import MemoryCard from "../components/MemoryCard";
@@ -9,15 +10,29 @@ import UploadBox from "../components/UploadBox";
 import { api, getApiError } from "../lib/api";
 import { Memory } from "../types";
 
+const timeFilters = [
+  { label: "All", days: undefined },
+  { label: "1 week", days: 7 },
+  { label: "2 weeks", days: 14 },
+  { label: "1 month", days: 30 },
+];
+
 export default function Dashboard() {
   const [memories, setMemories] = useState<Memory[]>([]);
+  const [selectedDays, setSelectedDays] = useState<number | undefined>();
+  const [summary, setSummary] = useState("");
+  const [summaryLoading, setSummaryLoading] = useState(false);
+  const [summaryError, setSummaryError] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   async function loadMemories() {
     setError("");
+    setLoading(true);
     try {
-      const response = await api.get<{ memories: Memory[] }>("/memories");
+      const response = await api.get<{ memories: Memory[] }>("/memories", {
+        params: selectedDays ? { days: selectedDays } : undefined,
+      });
       setMemories(response.data.memories);
     } catch (err) {
       setError(getApiError(err));
@@ -26,9 +41,25 @@ export default function Dashboard() {
     }
   }
 
+  async function summarizeThoughts() {
+    const days = selectedDays ?? 30;
+    setSummary("");
+    setSummaryError("");
+    setSummaryLoading(true);
+
+    try {
+      const response = await api.post<{ summary: string; memories_count: number }>("/summary", { days });
+      setSummary(response.data.summary);
+    } catch (err) {
+      setSummaryError(getApiError(err));
+    } finally {
+      setSummaryLoading(false);
+    }
+  }
+
   useEffect(() => {
     loadMemories();
-  }, []);
+  }, [selectedDays]);
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -40,10 +71,43 @@ export default function Dashboard() {
             <UploadBox onUploaded={loadMemories} />
             <SearchBar />
             <section className="soft-panel p-5">
-              <div className="mb-4 flex items-center justify-between">
+              <div className="mb-4 flex items-center justify-between gap-4">
                 <div>
-                  <h2 className="text-lg font-semibold text-slate-950">Recent Memories</h2>
-                  <p className="text-sm text-slate-500">Your latest saved knowledge</p>
+                  <h2 className="text-lg font-semibold text-slate-950">Thoughts Summary</h2>
+                  <p className="text-sm text-slate-500">Summarize recent uploads and notes</p>
+                </div>
+                <button className="button-secondary shrink-0" onClick={summarizeThoughts} disabled={summaryLoading}>
+                  <Sparkles size={17} />
+                  {summaryLoading ? "Summarizing..." : "Summarize"}
+                </button>
+              </div>
+              {summaryError && <p className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">{summaryError}</p>}
+              {summary ? (
+                <p className="whitespace-pre-wrap rounded-2xl bg-brand-50 p-4 text-sm leading-6 text-slate-700">{summary}</p>
+              ) : (
+                <div className="rounded-2xl border border-dashed border-slate-200 p-5 text-sm text-slate-500">
+                  Generate a compact summary of your recent memories, themes, and next actions.
+                </div>
+              )}
+            </section>
+            <section className="soft-panel p-5">
+              <div className="mb-4 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+                <div>
+                  <h2 className="text-lg font-semibold text-slate-950">My Uploads</h2>
+                  <p className="text-sm text-slate-500">Browse memories by recency</p>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {timeFilters.map((filter) => (
+                    <button
+                      key={filter.label}
+                      className={`rounded-xl px-3 py-2 text-sm font-semibold transition ${
+                        selectedDays === filter.days ? "bg-brand-600 text-white" : "border border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
+                      }`}
+                      onClick={() => setSelectedDays(filter.days)}
+                    >
+                      {filter.label}
+                    </button>
+                  ))}
                 </div>
               </div>
               {loading && <p className="text-sm text-slate-500">Loading memories...</p>}
@@ -67,4 +131,3 @@ export default function Dashboard() {
     </div>
   );
 }
-

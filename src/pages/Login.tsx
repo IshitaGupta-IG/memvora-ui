@@ -62,6 +62,9 @@ export default function Login() {
           <div>
             <label className="mb-2 block text-sm font-medium text-slate-700">Password</label>
             <input className="input" type="password" value={password} onChange={(event) => setPassword(event.target.value)} required />
+            <Link to="/forgot-password" className="mt-2 inline-block text-sm font-semibold text-brand-700">
+              Forgot password?
+            </Link>
           </div>
           {error && <p className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>}
           <button className="button-primary w-full" disabled={loading}>

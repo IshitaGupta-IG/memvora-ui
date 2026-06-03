@@ -10,6 +10,8 @@ type AuthContextValue = {
   signIn: (email: string, password: string) => Promise<void>;
   signInAsGuest: () => Promise<void>;
   signUp: (email: string, password: string) => Promise<{ needsEmailConfirmation: boolean }>;
+  resetPassword: (email: string) => Promise<void>;
+  updatePassword: (password: string) => Promise<void>;
   signOut: () => Promise<void>;
 };
 
@@ -83,6 +85,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         });
         if (error) throw error;
         return { needsEmailConfirmation: !data.session };
+      },
+      resetPassword: async (email) => {
+        const { error } = await supabase.auth.resetPasswordForEmail(email, {
+          redirectTo: `${window.location.origin}/reset-password`,
+        });
+        if (error) throw error;
+      },
+      updatePassword: async (password) => {
+        const { error } = await supabase.auth.updateUser({ password });
+        if (error) throw error;
       },
       signOut: async () => {
         const { error } = await supabase.auth.signOut();
