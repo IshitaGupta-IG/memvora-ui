@@ -56,7 +56,7 @@ export default function UploadBox({ onUploaded }: { onUploaded: () => void }) {
         <div className="relative">
           <Link className="pointer-events-none absolute left-5 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
           <input
-            className="input pl-14"
+            className="w-full rounded-2xl border border-slate-200/80 bg-white/90 py-3 pl-16 pr-4 text-sm outline-none transition placeholder:text-slate-400 focus:border-brand-500 focus:bg-white focus:ring-4 focus:ring-brand-100"
             placeholder="Paste a LinkedIn, Facebook, article, or blog link"
             type="url"
             value={linkUrl}
