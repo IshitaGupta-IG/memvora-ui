@@ -1,8 +1,9 @@
-import { Calendar, FileText } from "lucide-react";
+import { Calendar, FileText, Link } from "lucide-react";
 
 import { Memory } from "../types";
 
 export default function MemoryCard({ memory }: { memory: Memory }) {
+  const Icon = memory.source_type === "link" ? Link : FileText;
   const date = new Intl.DateTimeFormat("en", {
     month: "short",
     day: "numeric",
@@ -13,7 +14,7 @@ export default function MemoryCard({ memory }: { memory: Memory }) {
     <article className="rounded-2xl border border-slate-200 bg-white p-4 transition hover:border-brand-200 hover:shadow-sm">
       <div className="flex items-start gap-3">
         <div className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-slate-100 text-slate-600">
-          <FileText size={19} />
+          <Icon size={19} />
         </div>
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center justify-between gap-2">
@@ -30,4 +31,3 @@ export default function MemoryCard({ memory }: { memory: Memory }) {
     </article>
   );
 }
-

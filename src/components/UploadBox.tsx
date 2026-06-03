@@ -1,4 +1,4 @@
-import { FileText, UploadCloud } from "lucide-react";
+import { FileText, Link, UploadCloud } from "lucide-react";
 import { FormEvent, useState } from "react";
 
 import { api, getApiError } from "../lib/api";
@@ -6,6 +6,7 @@ import { api, getApiError } from "../lib/api";
 export default function UploadBox({ onUploaded }: { onUploaded: () => void }) {
   const [title, setTitle] = useState("");
   const [note, setNote] = useState("");
+  const [linkUrl, setLinkUrl] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
@@ -20,6 +21,7 @@ export default function UploadBox({ onUploaded }: { onUploaded: () => void }) {
     const formData = new FormData();
     formData.append("title", title);
     formData.append("note", note);
+    formData.append("link_url", linkUrl);
     if (file) formData.append("file", file);
 
     try {
@@ -27,6 +29,7 @@ export default function UploadBox({ onUploaded }: { onUploaded: () => void }) {
       setMessage(`Saved "${response.data.title}" with ${response.data.chunks_created} chunk(s).`);
       setTitle("");
       setNote("");
+      setLinkUrl("");
       setFile(null);
       onUploaded();
     } catch (err) {
@@ -44,15 +47,25 @@ export default function UploadBox({ onUploaded }: { onUploaded: () => void }) {
         </div>
         <div>
           <h2 className="text-lg font-semibold text-slate-950">Add Memory</h2>
-          <p className="text-sm text-slate-500">Upload a file or paste a note</p>
+          <p className="text-sm text-slate-500">Upload a file, paste a note, or save a link</p>
         </div>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <input className="input" placeholder="Title, like AWS deployment notes" value={title} onChange={(event) => setTitle(event.target.value)} />
+        <div className="relative">
+          <Link className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+          <input
+            className="input pl-11"
+            placeholder="Paste a LinkedIn, Facebook, article, or blog link"
+            type="url"
+            value={linkUrl}
+            onChange={(event) => setLinkUrl(event.target.value)}
+          />
+        </div>
         <textarea
           className="input min-h-32 resize-y"
-          placeholder="Paste a note, idea, meeting summary, or memory..."
+          placeholder="Paste a note, idea, meeting summary, excerpt, or context for a link..."
           value={note}
           onChange={(event) => setNote(event.target.value)}
         />
@@ -61,7 +74,7 @@ export default function UploadBox({ onUploaded }: { onUploaded: () => void }) {
             <FileText className="text-brand-600" size={22} />
             <div>
               <p className="text-sm font-medium text-slate-700">{file ? file.name : "Choose PDF, TXT, or Markdown"}</p>
-              <p className="text-xs text-slate-500">Text-based PDFs work best</p>
+              <p className="text-xs text-slate-500">Text-based PDFs work best; links may require public access</p>
             </div>
           </div>
           <input
@@ -80,4 +93,3 @@ export default function UploadBox({ onUploaded }: { onUploaded: () => void }) {
     </section>
   );
 }
-

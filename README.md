@@ -31,6 +31,7 @@ npm run preview
 ## Product Features
 
 - Forgot password and password reset flow through Supabase Auth.
+- Save readable public links, including article/blog/social post URLs, as searchable memories.
 - My Uploads filters for all memories, last 1 week, last 2 weeks, and last 1 month.
 - Thoughts Summary uses the backend AI endpoint to summarize recent memories.
 
