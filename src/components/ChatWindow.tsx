@@ -49,10 +49,10 @@ export default function ChatWindow() {
   }
 
   return (
-    <section id="ai-chat" className="soft-panel flex h-[720px] scroll-mt-24 flex-col overflow-hidden">
-      <div className="border-b border-slate-200 p-5">
+    <section id="ai-chat" className="soft-panel flex h-[760px] scroll-mt-24 flex-col overflow-hidden xl:sticky xl:top-28">
+      <div className="border-b border-white/70 bg-white/80 p-5">
         <div className="flex items-center gap-3">
-          <div className="grid h-10 w-10 place-items-center rounded-2xl bg-brand-600 text-white">
+          <div className="grid h-11 w-11 place-items-center rounded-2xl bg-slate-950 text-brand-200 shadow-lg shadow-brand-600/20">
             <Bot size={21} />
           </div>
           <div>
@@ -62,7 +62,7 @@ export default function ChatWindow() {
         </div>
       </div>
 
-      <div className="flex-1 space-y-4 overflow-y-auto bg-slate-50 p-4">
+      <div className="flex-1 space-y-4 overflow-y-auto bg-gradient-to-b from-brand-50/60 to-slate-50 p-4">
         {messages.map((message, index) => (
           <div key={`${message.role}-${index}`} className={`flex gap-3 ${message.role === "user" ? "justify-end" : "justify-start"}`}>
             {message.role === "assistant" && (
@@ -70,7 +70,7 @@ export default function ChatWindow() {
                 <Bot size={17} />
               </div>
             )}
-            <div className={`max-w-[82%] rounded-2xl px-4 py-3 text-sm leading-6 ${message.role === "user" ? "bg-brand-600 text-white" : "bg-white text-slate-700 shadow-sm"}`}>
+            <div className={`max-w-[82%] rounded-2xl px-4 py-3 text-sm leading-6 ${message.role === "user" ? "bg-slate-950 text-white shadow-lg shadow-brand-700/20" : "bg-white text-slate-700 shadow-sm"}`}>
               <p className="whitespace-pre-wrap">{message.content}</p>
               {message.sources && message.sources.length > 0 && (
                 <div className="mt-3 border-t border-slate-100 pt-3">
@@ -96,7 +96,7 @@ export default function ChatWindow() {
         <div ref={bottomRef} />
       </div>
 
-      <form onSubmit={handleSubmit} className="flex gap-3 border-t border-slate-200 bg-white p-4">
+      <form onSubmit={handleSubmit} className="flex gap-3 border-t border-white/70 bg-white/90 p-4">
         <input className="input" value={input} onChange={(event) => setInput(event.target.value)} placeholder="What did I upload about React?" />
         <button className="button-primary shrink-0" disabled={loading}>
           <Send size={17} />

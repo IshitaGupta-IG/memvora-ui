@@ -7,6 +7,7 @@ export default {
         brand: {
           50: "#ecfeff",
           100: "#cffafe",
+          200: "#99f6e4",
           500: "#14b8a6",
           600: "#0d9488",
           700: "#0f766e",
@@ -14,9 +15,9 @@ export default {
       },
       boxShadow: {
         soft: "0 18px 60px rgba(15, 23, 42, 0.08)",
+        glow: "0 24px 90px rgba(13, 148, 136, 0.18)",
       },
     },
   },
   plugins: [],
 };
-

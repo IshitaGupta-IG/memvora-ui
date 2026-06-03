@@ -5,7 +5,6 @@ import ChatWindow from "../components/ChatWindow";
 import MemoryCard from "../components/MemoryCard";
 import Navbar from "../components/Navbar";
 import SearchBar from "../components/SearchBar";
-import Sidebar from "../components/Sidebar";
 import UploadBox from "../components/UploadBox";
 import { api, getApiError } from "../lib/api";
 import { Memory } from "../types";
@@ -62,15 +61,40 @@ export default function Dashboard() {
   }, [selectedDays]);
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen">
       <Navbar />
-      <div className="mx-auto grid max-w-7xl gap-6 px-4 py-6 lg:grid-cols-[240px_1fr] lg:px-6">
-        <Sidebar />
-        <main className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_390px]">
+      <main className="mx-auto max-w-7xl px-4 py-8 lg:px-6">
+        <section className="mb-8 overflow-hidden rounded-[2rem] border border-white/80 bg-slate-950 p-6 text-white shadow-glow sm:p-8">
+          <div className="flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
+            <div className="max-w-3xl">
+              <p className="mb-3 text-sm font-semibold uppercase text-brand-200">Semantic memory workspace</p>
+              <h1 className="text-3xl font-black text-white sm:text-4xl">Capture anything. Retrieve it like a thought.</h1>
+              <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-300">
+                Upload notes, files, and links, then ask Memvora to search, summarize, and connect your saved context.
+              </p>
+            </div>
+            <div className="grid grid-cols-3 gap-3 text-center">
+              <div className="rounded-2xl border border-white/10 bg-white/10 px-4 py-3">
+                <p className="text-2xl font-black">{memories.length}</p>
+                <p className="text-xs text-slate-300">Memories</p>
+              </div>
+              <div className="rounded-2xl border border-white/10 bg-white/10 px-4 py-3">
+                <p className="text-2xl font-black">{selectedDays ?? "All"}</p>
+                <p className="text-xs text-slate-300">Days</p>
+              </div>
+              <div className="rounded-2xl border border-white/10 bg-white/10 px-4 py-3">
+                <p className="text-2xl font-black">AI</p>
+                <p className="text-xs text-slate-300">Recall</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_410px]">
           <section className="space-y-6">
             <UploadBox onUploaded={loadMemories} />
             <SearchBar />
-            <section id="memories" className="soft-panel scroll-mt-24 p-5">
+            <section className="soft-panel p-6">
               <div className="mb-4 flex items-center justify-between gap-4">
                 <div>
                   <h2 className="text-lg font-semibold text-slate-950">Thoughts Summary</h2>
@@ -83,14 +107,14 @@ export default function Dashboard() {
               </div>
               {summaryError && <p className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">{summaryError}</p>}
               {summary ? (
-                <p className="whitespace-pre-wrap rounded-2xl bg-brand-50 p-4 text-sm leading-6 text-slate-700">{summary}</p>
+                <p className="whitespace-pre-wrap rounded-2xl border border-brand-100 bg-brand-50/80 p-5 text-sm leading-6 text-slate-700">{summary}</p>
               ) : (
-                <div className="rounded-2xl border border-dashed border-slate-200 p-5 text-sm text-slate-500">
+                <div className="rounded-2xl border border-dashed border-brand-200 bg-white/70 p-5 text-sm text-slate-500">
                   Generate a compact summary of your recent memories, themes, and next actions.
                 </div>
               )}
             </section>
-            <section className="soft-panel p-5">
+            <section id="memories" className="soft-panel scroll-mt-24 p-6">
               <div className="mb-4 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
                 <div>
                   <h2 className="text-lg font-semibold text-slate-950">My Uploads</h2>
@@ -101,7 +125,7 @@ export default function Dashboard() {
                     <button
                       key={filter.label}
                       className={`rounded-xl px-3 py-2 text-sm font-semibold transition ${
-                        selectedDays === filter.days ? "bg-brand-600 text-white" : "border border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
+                        selectedDays === filter.days ? "bg-slate-950 text-white shadow-lg shadow-brand-700/20" : "border border-slate-200 bg-white/80 text-slate-600 hover:bg-brand-50"
                       }`}
                       onClick={() => setSelectedDays(filter.days)}
                     >
@@ -113,7 +137,7 @@ export default function Dashboard() {
               {loading && <p className="text-sm text-slate-500">Loading memories...</p>}
               {error && <p className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>}
               {!loading && !error && memories.length === 0 && (
-                <div className="rounded-2xl border border-dashed border-slate-200 p-8 text-center">
+                <div className="rounded-3xl border border-dashed border-brand-200 bg-white/70 p-8 text-center">
                   <p className="font-medium text-slate-700">No memories yet</p>
                   <p className="mt-1 text-sm text-slate-500">Upload a file or paste a note to begin.</p>
                 </div>
@@ -126,8 +150,8 @@ export default function Dashboard() {
             </section>
           </section>
           <ChatWindow />
-        </main>
-      </div>
+        </div>
+      </main>
     </div>
   );
 }

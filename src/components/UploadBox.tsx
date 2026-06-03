@@ -40,9 +40,9 @@ export default function UploadBox({ onUploaded }: { onUploaded: () => void }) {
   }
 
   return (
-    <section id="upload" className="soft-panel scroll-mt-24 p-5">
+    <section id="upload" className="soft-panel scroll-mt-24 p-6">
       <div className="mb-5 flex items-center gap-3">
-        <div className="grid h-10 w-10 place-items-center rounded-2xl bg-brand-50 text-brand-700">
+        <div className="grid h-11 w-11 place-items-center rounded-2xl bg-slate-950 text-brand-200 shadow-lg shadow-brand-600/20">
           <UploadCloud size={21} />
         </div>
         <div>
@@ -69,7 +69,7 @@ export default function UploadBox({ onUploaded }: { onUploaded: () => void }) {
           value={note}
           onChange={(event) => setNote(event.target.value)}
         />
-        <label className="flex cursor-pointer items-center justify-between rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-4 py-4 transition hover:border-brand-500 hover:bg-brand-50">
+        <label className="flex cursor-pointer items-center justify-between rounded-3xl border border-dashed border-brand-200 bg-white/70 px-4 py-4 transition hover:border-brand-500 hover:bg-brand-50">
           <div className="flex items-center gap-3">
             <FileText className="text-brand-600" size={22} />
             <div>
