@@ -49,7 +49,7 @@ export default function ChatWindow() {
   }
 
   return (
-    <section className="soft-panel flex h-[720px] flex-col overflow-hidden">
+    <section id="ai-chat" className="soft-panel flex h-[720px] scroll-mt-24 flex-col overflow-hidden">
       <div className="border-b border-slate-200 p-5">
         <div className="flex items-center gap-3">
           <div className="grid h-10 w-10 place-items-center rounded-2xl bg-brand-600 text-white">
@@ -105,4 +105,3 @@ export default function ChatWindow() {
     </section>
   );
 }
-

@@ -70,7 +70,7 @@ export default function Dashboard() {
           <section className="space-y-6">
             <UploadBox onUploaded={loadMemories} />
             <SearchBar />
-            <section className="soft-panel p-5">
+            <section id="memories" className="soft-panel scroll-mt-24 p-5">
               <div className="mb-4 flex items-center justify-between gap-4">
                 <div>
                   <h2 className="text-lg font-semibold text-slate-950">Thoughts Summary</h2>

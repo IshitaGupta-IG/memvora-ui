@@ -16,6 +16,10 @@ body {
   min-height: 100vh;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 button,
 input,
 textarea {
@@ -37,4 +41,3 @@ textarea {
 .button-secondary {
   @apply inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60;
 }
-

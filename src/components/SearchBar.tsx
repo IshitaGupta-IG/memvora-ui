@@ -30,7 +30,7 @@ export default function SearchBar() {
   }
 
   return (
-    <section className="soft-panel p-5">
+    <section id="search" className="soft-panel scroll-mt-24 p-5">
       <div className="mb-4 flex items-center gap-3">
         <div className="grid h-10 w-10 place-items-center rounded-2xl bg-slate-100 text-slate-700">
           <Search size={20} />
@@ -66,4 +66,3 @@ export default function SearchBar() {
     </section>
   );
 }
-

@@ -40,7 +40,7 @@ export default function UploadBox({ onUploaded }: { onUploaded: () => void }) {
   }
 
   return (
-    <section className="soft-panel p-5">
+    <section id="upload" className="soft-panel scroll-mt-24 p-5">
       <div className="mb-5 flex items-center gap-3">
         <div className="grid h-10 w-10 place-items-center rounded-2xl bg-brand-50 text-brand-700">
           <UploadCloud size={21} />
