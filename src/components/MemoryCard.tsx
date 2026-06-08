@@ -15,6 +15,7 @@ export default function MemoryCard({ memory, onChanged }: { memory: Memory; onCh
   const [title, setTitle] = useState(memory.title);
   const [content, setContent] = useState(memory.original_content);
   const [fullMemory, setFullMemory] = useState(memory);
+  const [detailLoaded, setDetailLoaded] = useState(Boolean(memory.image_data_url || (memory.original_content && memory.source_type !== "screenshot")));
   const [detailLoading, setDetailLoading] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -23,7 +24,7 @@ export default function MemoryCard({ memory, onChanged }: { memory: Memory; onCh
   const [showImageViewer, setShowImageViewer] = useState(false);
 
   async function loadMemoryDetail() {
-    if (fullMemory.original_content || fullMemory.image_data_url) {
+    if (detailLoaded) {
       return fullMemory;
     }
 
@@ -34,6 +35,7 @@ export default function MemoryCard({ memory, onChanged }: { memory: Memory; onCh
       setFullMemory(response.data.memory);
       setTitle(response.data.memory.title);
       setContent(response.data.memory.original_content);
+      setDetailLoaded(true);
       return response.data.memory;
     } catch (err) {
       setError(getApiError(err));
@@ -75,6 +77,7 @@ export default function MemoryCard({ memory, onChanged }: { memory: Memory; onCh
         original_content: content,
       });
       setFullMemory((current) => ({ ...current, title, original_content: content }));
+      setDetailLoaded(true);
       setIsEditing(false);
       onChanged();
     } catch (err) {
