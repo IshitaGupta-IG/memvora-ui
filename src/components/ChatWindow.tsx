@@ -3,6 +3,7 @@ import { FormEvent, useRef, useState } from "react";
 
 import { api, getApiError } from "../lib/api";
 import { ChatMessage } from "../types";
+import { FormattedText } from "./SummaryView";
 
 export default function ChatWindow() {
   const [messages, setMessages] = useState<ChatMessage[]>([
@@ -71,7 +72,7 @@ export default function ChatWindow() {
               </div>
             )}
             <div className={`max-w-[82%] rounded-2xl px-4 py-3 text-sm leading-6 ${message.role === "user" ? "bg-slate-950 text-white shadow-lg shadow-brand-700/20" : "bg-white text-slate-700 shadow-sm"}`}>
-              <p className="whitespace-pre-wrap">{message.content}</p>
+              {message.role === "assistant" ? <FormattedText text={message.content} variant="chat" /> : <p className="whitespace-pre-wrap">{message.content}</p>}
               {message.sources && message.sources.length > 0 && (
                 <div className="mt-3 border-t border-slate-100 pt-3">
                   <p className="mb-2 text-xs font-semibold uppercase text-slate-400">Sources</p>
