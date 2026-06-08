@@ -4,6 +4,12 @@ import { Link, useNavigate } from "react-router-dom";
 
 import { useAuth } from "../context/AuthContext";
 
+function isEmailRateLimitError(err: unknown) {
+  if (!(err instanceof Error)) return false;
+  const message = err.message.toLowerCase();
+  return message.includes("email rate limit") || message.includes("rate limit exceeded") || message.includes("too many");
+}
+
 export default function Register() {
   const navigate = useNavigate();
   const { signInAsGuest, signUp } = useAuth();
@@ -12,6 +18,11 @@ export default function Register() {
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  async function startGuestSession() {
+    await signInAsGuest();
+    navigate("/");
+  }
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
@@ -28,7 +39,20 @@ export default function Register() {
         setTimeout(() => navigate("/login"), 900);
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Could not create account.");
+      if (isEmailRateLimitError(err)) {
+        setError("Supabase email sending is rate-limited right now. You can continue as a guest and create an account later.");
+        const continueAsGuest = window.confirm("Email confirmation is temporarily rate-limited. Continue as a guest session instead?");
+        if (continueAsGuest) {
+          try {
+            await startGuestSession();
+            return;
+          } catch (guestErr) {
+            setError(guestErr instanceof Error ? guestErr.message : "Could not start a guest session.");
+          }
+        }
+      } else {
+        setError(err instanceof Error ? err.message : "Could not create account.");
+      }
     } finally {
       setLoading(false);
     }
@@ -40,8 +64,7 @@ export default function Register() {
     setLoading(true);
 
     try {
-      await signInAsGuest();
-      navigate("/");
+      await startGuestSession();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not start a guest session.");
     } finally {

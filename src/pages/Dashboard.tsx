@@ -144,7 +144,7 @@ export default function Dashboard() {
               )}
               <div className="grid gap-3">
                 {memories.map((memory) => (
-                  <MemoryCard key={memory.id} memory={memory} />
+                  <MemoryCard key={memory.id} memory={memory} onChanged={loadMemories} />
                 ))}
               </div>
             </section>
