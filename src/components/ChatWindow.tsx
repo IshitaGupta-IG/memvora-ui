@@ -1,4 +1,4 @@
-import { Bot, Send, UserRound } from "lucide-react";
+import { Bot, Send, UserRound, X } from "lucide-react";
 import { FormEvent, useRef, useState } from "react";
 
 import { api, getApiError } from "../lib/api";
@@ -6,6 +6,7 @@ import { ChatMessage } from "../types";
 import { FormattedText } from "./SummaryView";
 
 export default function ChatWindow() {
+  const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       role: "assistant",
@@ -49,21 +50,38 @@ export default function ChatWindow() {
     }
   }
 
+  if (!open) {
+    return (
+      <button
+        className="fixed bottom-5 right-5 z-40 inline-flex items-center gap-3 rounded-2xl bg-slate-950 px-5 py-4 text-sm font-semibold text-white shadow-2xl shadow-brand-900/25 transition hover:-translate-y-0.5 hover:bg-brand-700"
+        onClick={() => setOpen(true)}
+      >
+        <Bot size={19} />
+        AI Chat
+      </button>
+    );
+  }
+
   return (
-    <section
-      id="ai-chat"
-      className="soft-panel flex h-[680px] min-h-[540px] w-full scroll-mt-24 flex-col overflow-hidden xl:sticky xl:top-28 xl:h-[calc(100vh-8rem)] xl:max-h-[760px] xl:self-start"
-    >
+    <section id="ai-chat" className="fixed bottom-5 right-5 z-40 flex h-[min(680px,calc(100vh-2.5rem))] w-[min(430px,calc(100vw-2.5rem))] flex-col overflow-hidden rounded-3xl border border-white/80 bg-white shadow-2xl shadow-brand-900/20">
       <div className="border-b border-white/70 bg-white/80 p-5">
-        <div className="flex items-center gap-3">
-          <div className="grid h-11 w-11 place-items-center rounded-2xl bg-slate-950 text-brand-200 shadow-lg shadow-brand-600/20">
-            <Bot size={21} />
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <div className="grid h-11 w-11 place-items-center rounded-2xl bg-slate-950 text-brand-200 shadow-lg shadow-brand-600/20">
+              <Bot size={21} />
+            </div>
+            <div>
+              <h2 className="text-lg font-semibold text-slate-950">AI Chat</h2>
+              <p className="text-sm text-slate-500">Grounded in your memories</p>
+            </div>
           </div>
-          <div>
-            <h2 className="text-lg font-semibold text-slate-950">AI Chat</h2>
-            <p className="text-sm text-slate-500">Grounded in your memories</p>
-          </div>
+          <button className="grid h-9 w-9 place-items-center rounded-xl border border-slate-200 text-slate-500 transition hover:bg-slate-50" onClick={() => setOpen(false)} title="Collapse chat">
+            <X size={17} />
+          </button>
         </div>
+        <p className="mt-3 rounded-xl bg-slate-50 px-3 py-2 text-xs leading-5 text-slate-500">
+          Answers may use Gemini/OpenRouter with redacted memory context.
+        </p>
       </div>
 
       <div className="flex-1 space-y-4 overflow-y-auto bg-gradient-to-b from-brand-50/60 to-slate-50 p-4">

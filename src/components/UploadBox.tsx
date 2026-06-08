@@ -72,6 +72,9 @@ export default function UploadBox({ onUploaded }: { onUploaded: () => void }) {
           <p className="text-sm text-slate-500">Upload a file, paste a note, save a link, or paste a screenshot</p>
         </div>
       </div>
+      <p className="mb-4 rounded-2xl bg-slate-50 px-4 py-3 text-xs leading-5 text-slate-500">
+        AI features may send relevant memory text or screenshots to your configured providers for extraction and answers. Avoid saving secrets.
+      </p>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <input className="input" placeholder="Title, like AWS deployment notes" value={title} onChange={(event) => setTitle(event.target.value)} />

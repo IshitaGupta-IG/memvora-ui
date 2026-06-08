@@ -1,11 +1,11 @@
-import { Calendar, Check, FileText, Link, Pencil, Trash2, X } from "lucide-react";
+import { Calendar, Check, ChevronDown, FileText, Image, Link, Pencil, Trash2, X } from "lucide-react";
 import { FormEvent, useState } from "react";
 
 import { api, getApiError } from "../lib/api";
 import { Memory } from "../types";
 
 export default function MemoryCard({ memory, onChanged }: { memory: Memory; onChanged: () => void }) {
-  const Icon = memory.source_type === "link" ? Link : FileText;
+  const Icon = memory.source_type === "link" ? Link : memory.source_type === "screenshot" ? Image : FileText;
   const date = new Intl.DateTimeFormat("en", {
     month: "short",
     day: "numeric",
@@ -17,6 +17,7 @@ export default function MemoryCard({ memory, onChanged }: { memory: Memory; onCh
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [expanded, setExpanded] = useState(false);
 
   function cancelEdit() {
     setTitle(memory.title);
@@ -81,10 +82,29 @@ export default function MemoryCard({ memory, onChanged }: { memory: Memory; onCh
             </form>
           ) : (
             <>
-              <div className="flex flex-wrap items-center justify-between gap-2">
-                <h3 className="font-semibold text-slate-900">{memory.title}</h3>
+              <button className="flex w-full items-center justify-between gap-3 text-left" type="button" onClick={() => setExpanded((current) => !current)}>
+                <div className="min-w-0">
+                  <h3 className="truncate font-semibold text-slate-900">{memory.title}</h3>
+                  <div className="mt-1 flex items-center gap-2 text-xs text-slate-400">
+                    <Calendar size={14} />
+                    {date}
+                  </div>
+                </div>
                 <div className="flex items-center gap-2">
                   <span className="rounded-full bg-brand-50 px-3 py-1 text-xs font-medium text-brand-700">{memory.source_type}</span>
+                  <ChevronDown className={`text-slate-400 transition ${expanded ? "rotate-180" : ""}`} size={17} />
+                </div>
+              </button>
+              {expanded && (
+                <div className="mt-4 border-t border-slate-100 pt-4">
+                  {memory.source_type === "screenshot" && (
+                    <p className="mb-3 rounded-xl bg-brand-50 px-4 py-3 text-sm text-brand-800">
+                      Screenshot memory. If OCR succeeded, extracted text is shown below; if not, edit this memory to add searchable context.
+                    </p>
+                  )}
+                  <p className="whitespace-pre-wrap rounded-2xl bg-slate-50 p-4 text-sm leading-6 text-slate-600">{memory.original_content}</p>
+                  {error && <p className="mt-3 rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>}
+                  <div className="mt-3 flex flex-wrap items-center gap-2">
                   <button
                     className="grid h-8 w-8 place-items-center rounded-xl border border-slate-200 text-slate-500 transition hover:border-brand-200 hover:bg-brand-50 hover:text-brand-700"
                     type="button"
@@ -104,13 +124,8 @@ export default function MemoryCard({ memory, onChanged }: { memory: Memory; onCh
                     <Trash2 size={15} />
                   </button>
                 </div>
-              </div>
-              <p className="mt-2 line-clamp-2 text-sm leading-6 text-slate-500">{memory.original_content}</p>
-              {error && <p className="mt-3 rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>}
-              <div className="mt-3 flex items-center gap-2 text-xs text-slate-400">
-                <Calendar size={14} />
-                {date}
-              </div>
+                </div>
+              )}
             </>
           )}
         </div>
