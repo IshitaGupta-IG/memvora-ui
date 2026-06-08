@@ -15,6 +15,7 @@ export default function Register() {
   const { signInAsGuest, signUp } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [emailRateLimited, setEmailRateLimited] = useState(false);
@@ -30,6 +31,12 @@ export default function Register() {
     setError("");
     setMessage("");
     setEmailRateLimited(false);
+
+    if (password !== confirmPassword) {
+      setError("Passwords do not match.");
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -93,6 +100,17 @@ export default function Register() {
               minLength={6}
               value={password}
               onChange={(event) => setPassword(event.target.value)}
+              required
+            />
+          </div>
+          <div>
+            <label className="mb-2 block text-sm font-medium text-slate-700">Confirm password</label>
+            <input
+              className="input"
+              type="password"
+              minLength={6}
+              value={confirmPassword}
+              onChange={(event) => setConfirmPassword(event.target.value)}
               required
             />
           </div>
