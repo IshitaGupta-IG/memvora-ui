@@ -1,4 +1,4 @@
-import { Calendar, Check, ChevronDown, FileText, Image, Link, Pencil, Trash2, X } from "lucide-react";
+import { Calendar, Check, ChevronDown, FileText, Image, Link, Maximize2, Pencil, Trash2, X } from "lucide-react";
 import { FormEvent, useState } from "react";
 
 import { api, getApiError } from "../lib/api";
@@ -18,6 +18,7 @@ export default function MemoryCard({ memory, onChanged }: { memory: Memory; onCh
   const [error, setError] = useState("");
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [expanded, setExpanded] = useState(false);
+  const [showImageViewer, setShowImageViewer] = useState(false);
 
   function cancelEdit() {
     setTitle(memory.title);
@@ -98,9 +99,25 @@ export default function MemoryCard({ memory, onChanged }: { memory: Memory; onCh
               {expanded && (
                 <div className="mt-4 border-t border-slate-100 pt-4">
                   {memory.source_type === "screenshot" && (
-                    <p className="mb-3 rounded-xl bg-brand-50 px-4 py-3 text-sm text-brand-800">
-                      Screenshot memory. If OCR succeeded, extracted text is shown below; if not, edit this memory to add searchable context.
-                    </p>
+                    <div className="mb-3">
+                      {memory.image_data_url ? (
+                        <button
+                          className="group relative block w-full overflow-hidden rounded-2xl border border-slate-200 bg-slate-950 text-left"
+                          type="button"
+                          onClick={() => setShowImageViewer(true)}
+                          title="Open screenshot"
+                        >
+                          <img className="max-h-64 w-full object-contain" src={memory.image_data_url} alt={memory.title} loading="lazy" />
+                          <span className="absolute right-3 top-3 grid h-9 w-9 place-items-center rounded-full bg-white/90 text-slate-700 shadow-lg transition group-hover:bg-brand-600 group-hover:text-white">
+                            <Maximize2 size={17} />
+                          </span>
+                        </button>
+                      ) : (
+                        <p className="rounded-xl bg-brand-50 px-4 py-3 text-sm text-brand-800">
+                          Screenshot preview is unavailable for this memory. OCR text is shown below.
+                        </p>
+                      )}
+                    </div>
                   )}
                   <p className="whitespace-pre-wrap rounded-2xl bg-slate-50 p-4 text-sm leading-6 text-slate-600">{memory.original_content}</p>
                   {error && <p className="mt-3 rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>}
@@ -146,6 +163,21 @@ export default function MemoryCard({ memory, onChanged }: { memory: Memory; onCh
                 {loading ? "Deleting..." : "Delete"}
               </button>
             </div>
+          </div>
+        </div>
+      )}
+      {showImageViewer && memory.image_data_url && (
+        <div className="fixed inset-0 z-[60] bg-slate-950/95 p-4 backdrop-blur-sm sm:p-6">
+          <button
+            className="absolute right-4 top-4 grid h-11 w-11 place-items-center rounded-full bg-white text-slate-800 shadow-2xl transition hover:bg-brand-50 hover:text-brand-700"
+            type="button"
+            onClick={() => setShowImageViewer(false)}
+            title="Close screenshot"
+          >
+            <X size={22} />
+          </button>
+          <div className="flex h-full w-full items-center justify-center pt-12">
+            <img className="max-h-full max-w-full rounded-2xl object-contain shadow-2xl" src={memory.image_data_url} alt={memory.title} />
           </div>
         </div>
       )}

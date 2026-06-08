@@ -4,6 +4,7 @@ export type Memory = {
   source_type: string;
   original_content: string;
   created_at: string;
+  image_data_url?: string | null;
 };
 
 export type SearchResult = {
@@ -20,4 +21,3 @@ export type ChatMessage = {
   content: string;
   sources?: SearchResult[];
 };
-
