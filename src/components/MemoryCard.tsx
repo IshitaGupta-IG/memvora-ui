@@ -83,19 +83,46 @@ export default function MemoryCard({ memory, onChanged }: { memory: Memory; onCh
             </form>
           ) : (
             <>
-              <button className="flex w-full items-center justify-between gap-3 text-left" type="button" onClick={() => setExpanded((current) => !current)}>
-                <div className="min-w-0">
-                  <h3 className="truncate font-semibold text-slate-900">{memory.title}</h3>
-                  <div className="mt-1 flex items-center gap-2 text-xs text-slate-400">
-                    <Calendar size={14} />
-                    {date}
+              <div className="flex w-full flex-wrap items-center justify-between gap-3 sm:flex-nowrap">
+                <button className="min-w-0 flex-1 text-left" type="button" onClick={() => setExpanded((current) => !current)}>
+                  <div className="min-w-0">
+                    <h3 className="truncate font-semibold text-slate-900">{memory.title}</h3>
+                    <div className="mt-1 flex items-center gap-2 text-xs text-slate-400">
+                      <Calendar size={14} />
+                      {date}
+                    </div>
                   </div>
-                </div>
-                <div className="flex items-center gap-2">
+                </button>
+                <div className="ml-auto flex shrink-0 items-center gap-2">
                   <span className="rounded-full bg-brand-50 px-3 py-1 text-xs font-medium text-brand-700">{memory.source_type}</span>
-                  <ChevronDown className={`text-slate-400 transition ${expanded ? "rotate-180" : ""}`} size={17} />
+                  <button
+                    className="grid h-8 w-8 place-items-center rounded-xl border border-slate-200 text-slate-500 transition hover:border-brand-200 hover:bg-brand-50 hover:text-brand-700"
+                    type="button"
+                    onClick={() => setIsEditing(true)}
+                    title="Edit memory"
+                    disabled={loading}
+                  >
+                    <Pencil size={15} />
+                  </button>
+                  <button
+                    className="grid h-8 w-8 place-items-center rounded-xl border border-slate-200 text-slate-500 transition hover:border-red-200 hover:bg-red-50 hover:text-red-700"
+                    type="button"
+                    onClick={() => setShowDeleteConfirm(true)}
+                    title="Delete memory"
+                    disabled={loading}
+                  >
+                    <Trash2 size={15} />
+                  </button>
+                  <button
+                    className="grid h-8 w-8 place-items-center rounded-xl border border-slate-200 text-slate-500 transition hover:border-brand-200 hover:bg-brand-50 hover:text-brand-700"
+                    type="button"
+                    onClick={() => setExpanded((current) => !current)}
+                    title={expanded ? "Collapse memory" : "Expand memory"}
+                  >
+                    <ChevronDown className={`transition ${expanded ? "rotate-180" : ""}`} size={17} />
+                  </button>
                 </div>
-              </button>
+              </div>
               {expanded && (
                 <div className="mt-4 border-t border-slate-100 pt-4">
                   {memory.source_type === "screenshot" && (
@@ -121,26 +148,6 @@ export default function MemoryCard({ memory, onChanged }: { memory: Memory; onCh
                   )}
                   <p className="whitespace-pre-wrap rounded-2xl bg-slate-50 p-4 text-sm leading-6 text-slate-600">{memory.original_content}</p>
                   {error && <p className="mt-3 rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>}
-                  <div className="mt-3 flex flex-wrap items-center gap-2">
-                  <button
-                    className="grid h-8 w-8 place-items-center rounded-xl border border-slate-200 text-slate-500 transition hover:border-brand-200 hover:bg-brand-50 hover:text-brand-700"
-                    type="button"
-                    onClick={() => setIsEditing(true)}
-                    title="Edit memory"
-                    disabled={loading}
-                  >
-                    <Pencil size={15} />
-                  </button>
-                  <button
-                    className="grid h-8 w-8 place-items-center rounded-xl border border-slate-200 text-slate-500 transition hover:border-red-200 hover:bg-red-50 hover:text-red-700"
-                    type="button"
-                    onClick={() => setShowDeleteConfirm(true)}
-                    title="Delete memory"
-                    disabled={loading}
-                  >
-                    <Trash2 size={15} />
-                  </button>
-                </div>
                 </div>
               )}
             </>
