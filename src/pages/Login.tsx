@@ -1,8 +1,9 @@
 import { Brain } from "lucide-react";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import { useAuth } from "../context/AuthContext";
+import { getSupabaseAuthError } from "../lib/authRedirects";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -11,6 +12,14 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const authError = getSupabaseAuthError();
+    if (!authError) return;
+
+    setError(authError);
+    window.history.replaceState(null, "", window.location.pathname + window.location.search);
+  }, []);
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();

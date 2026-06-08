@@ -2,6 +2,7 @@ import { Session, User } from "@supabase/supabase-js";
 import { createContext, ReactNode, useContext, useEffect, useMemo, useState } from "react";
 
 import { supabase } from "../lib/supabase";
+import { getAuthRedirectUrl } from "../lib/authRedirects";
 
 type AuthContextValue = {
   session: Session | null;
@@ -77,7 +78,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           email,
           password,
           options: {
-            emailRedirectTo: `${window.location.origin}/login`,
+            emailRedirectTo: getAuthRedirectUrl("/login"),
             data: {
               app_name: "Memvora",
             },
@@ -88,7 +89,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       },
       resetPassword: async (email) => {
         const { error } = await supabase.auth.resetPasswordForEmail(email, {
-          redirectTo: `${window.location.origin}/reset-password`,
+          redirectTo: getAuthRedirectUrl("/reset-password"),
         });
         if (error) throw error;
       },
