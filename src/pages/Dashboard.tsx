@@ -20,12 +20,13 @@ export default function Dashboard() {
   const [memories, setMemories] = useState<Memory[]>([]);
   const [selectedDays, setSelectedDays] = useState<number | undefined>();
   const [summary, setSummary] = useState("");
+  const [summaryStale, setSummaryStale] = useState(false);
   const [summaryLoading, setSummaryLoading] = useState(false);
   const [summaryError, setSummaryError] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  async function loadMemories() {
+  async function loadMemories(options: { markSummaryStale?: boolean } = {}) {
     setError("");
     setLoading(true);
     try {
@@ -33,6 +34,9 @@ export default function Dashboard() {
         params: selectedDays ? { days: selectedDays } : undefined,
       });
       setMemories(response.data.memories);
+      if (options.markSummaryStale && summary) {
+        setSummaryStale(true);
+      }
     } catch (err) {
       setError(getApiError(err));
     } finally {
@@ -49,6 +53,7 @@ export default function Dashboard() {
     try {
       const response = await api.post<{ summary: string; memories_count: number }>("/summary", { days });
       setSummary(response.data.summary);
+      setSummaryStale(false);
     } catch (err) {
       setSummaryError(getApiError(err));
     } finally {
@@ -57,6 +62,9 @@ export default function Dashboard() {
   }
 
   useEffect(() => {
+    if (summary) {
+      setSummaryStale(true);
+    }
     loadMemories();
   }, [selectedDays]);
 
@@ -92,7 +100,7 @@ export default function Dashboard() {
 
         <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_410px]">
           <section className="space-y-6">
-            <UploadBox onUploaded={loadMemories} />
+            <UploadBox onUploaded={() => loadMemories({ markSummaryStale: true })} />
             <SearchBar />
             <section className="soft-panel p-6">
               <div className="mb-4 flex items-center justify-between gap-4">
@@ -102,10 +110,15 @@ export default function Dashboard() {
                 </div>
                 <button className="button-secondary shrink-0" onClick={summarizeThoughts} disabled={summaryLoading}>
                   <Sparkles size={17} />
-                  {summaryLoading ? "Summarizing..." : "Summarize"}
+                  {summaryLoading ? "Summarizing..." : summary ? "Re-summarize" : "Summarize"}
                 </button>
               </div>
               {summaryError && <p className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">{summaryError}</p>}
+              {summary && summaryStale && (
+                <p className="mb-3 rounded-xl bg-amber-50 px-4 py-3 text-sm text-amber-700">
+                  New or filtered memories may not be included yet. Re-summarize to refresh this view.
+                </p>
+              )}
               {summary ? (
                 <p className="whitespace-pre-wrap rounded-2xl border border-brand-100 bg-brand-50/80 p-5 text-sm leading-6 text-slate-700">{summary}</p>
               ) : (
@@ -144,7 +157,7 @@ export default function Dashboard() {
               )}
               <div className="grid gap-3">
                 {memories.map((memory) => (
-                  <MemoryCard key={memory.id} memory={memory} onChanged={loadMemories} />
+                  <MemoryCard key={memory.id} memory={memory} onChanged={() => loadMemories({ markSummaryStale: true })} />
                 ))}
               </div>
             </section>
