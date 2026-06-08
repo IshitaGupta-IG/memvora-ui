@@ -5,6 +5,7 @@ import ChatWindow from "../components/ChatWindow";
 import MemoryCard from "../components/MemoryCard";
 import Navbar from "../components/Navbar";
 import SearchBar from "../components/SearchBar";
+import SummaryView from "../components/SummaryView";
 import UploadBox from "../components/UploadBox";
 import { api, getApiError } from "../lib/api";
 import { Memory } from "../types";
@@ -120,7 +121,7 @@ export default function Dashboard() {
                 </p>
               )}
               {summary ? (
-                <p className="whitespace-pre-wrap rounded-2xl border border-brand-100 bg-brand-50/80 p-5 text-sm leading-6 text-slate-700">{summary}</p>
+                <SummaryView summary={summary} />
               ) : (
                 <div className="rounded-2xl border border-dashed border-brand-200 bg-white/70 p-5 text-sm text-slate-500">
                   Generate a compact summary of your recent memories, themes, and next actions.
