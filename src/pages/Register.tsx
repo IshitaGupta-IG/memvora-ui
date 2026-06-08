@@ -17,6 +17,7 @@ export default function Register() {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const [emailRateLimited, setEmailRateLimited] = useState(false);
   const [loading, setLoading] = useState(false);
 
   async function startGuestSession() {
@@ -28,6 +29,7 @@ export default function Register() {
     event.preventDefault();
     setError("");
     setMessage("");
+    setEmailRateLimited(false);
     setLoading(true);
 
     try {
@@ -40,16 +42,8 @@ export default function Register() {
       }
     } catch (err) {
       if (isEmailRateLimitError(err)) {
-        setError("Supabase email sending is rate-limited right now. You can continue as a guest and create an account later.");
-        const continueAsGuest = window.confirm("Email confirmation is temporarily rate-limited. Continue as a guest session instead?");
-        if (continueAsGuest) {
-          try {
-            await startGuestSession();
-            return;
-          } catch (guestErr) {
-            setError(guestErr instanceof Error ? guestErr.message : "Could not start a guest session.");
-          }
-        }
+        setEmailRateLimited(true);
+        setError("");
       } else {
         setError(err instanceof Error ? err.message : "Could not create account.");
       }
@@ -61,6 +55,7 @@ export default function Register() {
   async function handleGuestSignIn() {
     setError("");
     setMessage("");
+    setEmailRateLimited(false);
     setLoading(true);
 
     try {
@@ -102,6 +97,22 @@ export default function Register() {
             />
           </div>
           {error && <p className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>}
+          {emailRateLimited && (
+            <div className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-4">
+              <p className="text-sm font-semibold text-amber-900">Email confirmation is temporarily limited</p>
+              <p className="mt-1 text-sm leading-6 text-amber-800">
+                Supabase is pausing new confirmation emails for a bit. You can keep exploring Memvora as a guest and create your account later.
+              </p>
+              <div className="mt-4 flex flex-col gap-2 sm:flex-row">
+                <button className="button-primary flex-1 px-4 py-2 text-sm" type="button" onClick={handleGuestSignIn} disabled={loading}>
+                  {loading ? "Starting..." : "Continue as guest"}
+                </button>
+                <button className="button-secondary flex-1 px-4 py-2 text-sm" type="submit" disabled={loading}>
+                  Try email again
+                </button>
+              </div>
+            </div>
+          )}
           {message && <p className="rounded-xl bg-emerald-50 px-4 py-3 text-sm text-emerald-700">{message}</p>}
           <button className="button-primary w-full" disabled={loading}>
             {loading ? "Creating account..." : "Create account"}
