@@ -1,5 +1,5 @@
 import { FileText, Image, Link, UploadCloud } from "lucide-react";
-import { ClipboardEvent, FormEvent, useState } from "react";
+import { ClipboardEvent, FormEvent, useEffect, useState } from "react";
 
 import { api, getApiError } from "../lib/api";
 
@@ -8,6 +8,7 @@ export default function UploadBox({ onUploaded }: { onUploaded: () => void }) {
   const [note, setNote] = useState("");
   const [linkUrl, setLinkUrl] = useState("");
   const [file, setFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState("");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
@@ -18,6 +19,17 @@ export default function UploadBox({ onUploaded }: { onUploaded: () => void }) {
       setTitle(nextFile.type.startsWith("image/") ? "Pasted screenshot" : nextFile.name.replace(/\.[^.]+$/, ""));
     }
   }
+
+  useEffect(() => {
+    if (!file?.type.startsWith("image/")) {
+      setPreviewUrl("");
+      return;
+    }
+
+    const nextPreviewUrl = URL.createObjectURL(file);
+    setPreviewUrl(nextPreviewUrl);
+    return () => URL.revokeObjectURL(nextPreviewUrl);
+  }, [file]);
 
   function handlePaste(event: ClipboardEvent<HTMLElement>) {
     const imageItem = Array.from(event.clipboardData.items).find((item) => item.type.startsWith("image/"));
@@ -110,6 +122,17 @@ export default function UploadBox({ onUploaded }: { onUploaded: () => void }) {
             onChange={(event) => useSelectedFile(event.target.files?.[0] ?? null)}
           />
         </label>
+        {previewUrl && (
+          <div className="rounded-3xl border border-slate-200 bg-white p-3">
+            <div className="flex items-center gap-3">
+              <img className="h-24 w-32 rounded-2xl border border-slate-100 bg-slate-950 object-contain" src={previewUrl} alt="Attached screenshot preview" />
+              <div className="min-w-0">
+                <p className="truncate text-sm font-semibold text-slate-800">Screenshot attached</p>
+                <p className="mt-1 text-xs leading-5 text-slate-500">This preview will be saved with the memory when the image is within the storage limit.</p>
+              </div>
+            </div>
+          </div>
+        )}
         {error && <p className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>}
         {message && <p className="rounded-xl bg-emerald-50 px-4 py-3 text-sm text-emerald-700">{message}</p>}
         <button className="button-primary" disabled={loading}>
