@@ -16,6 +16,7 @@ export default function MemoryCard({ memory, onChanged }: { memory: Memory; onCh
   const [content, setContent] = useState(memory.original_content);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   function cancelEdit() {
     setTitle(memory.title);
@@ -44,9 +45,6 @@ export default function MemoryCard({ memory, onChanged }: { memory: Memory; onCh
   }
 
   async function deleteMemory() {
-    const confirmed = window.confirm(`Delete "${memory.title}"?`);
-    if (!confirmed) return;
-
     setError("");
     setLoading(true);
     try {
@@ -99,7 +97,7 @@ export default function MemoryCard({ memory, onChanged }: { memory: Memory; onCh
                   <button
                     className="grid h-8 w-8 place-items-center rounded-xl border border-slate-200 text-slate-500 transition hover:border-red-200 hover:bg-red-50 hover:text-red-700"
                     type="button"
-                    onClick={deleteMemory}
+                    onClick={() => setShowDeleteConfirm(true)}
                     title="Delete memory"
                     disabled={loading}
                   >
@@ -117,6 +115,25 @@ export default function MemoryCard({ memory, onChanged }: { memory: Memory; onCh
           )}
         </div>
       </div>
+      {showDeleteConfirm && (
+        <div className="fixed inset-0 z-50 grid place-items-center bg-slate-950/35 px-4 backdrop-blur-sm">
+          <div className="w-full max-w-sm rounded-3xl border border-white/80 bg-white p-6 shadow-2xl">
+            <h3 className="text-lg font-bold text-slate-950">Delete memory?</h3>
+            <p className="mt-2 text-sm leading-6 text-slate-600">
+              This will remove "{memory.title}" and its search chunks from Memvora.
+            </p>
+            {error && <p className="mt-4 rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>}
+            <div className="mt-5 flex gap-3">
+              <button className="button-secondary flex-1 px-4 py-2" type="button" onClick={() => setShowDeleteConfirm(false)} disabled={loading}>
+                Cancel
+              </button>
+              <button className="button-primary flex-1 bg-red-600 px-4 py-2 hover:bg-red-700" type="button" onClick={deleteMemory} disabled={loading}>
+                {loading ? "Deleting..." : "Delete"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </article>
   );
 }

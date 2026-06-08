@@ -17,6 +17,21 @@ const timeFilters = [
   { label: "1 month", days: 30 },
 ];
 
+function MemorySkeleton() {
+  return (
+    <div className="rounded-2xl border border-slate-200 bg-white p-4">
+      <div className="flex gap-3">
+        <div className="h-10 w-10 shrink-0 animate-pulse rounded-2xl bg-slate-100" />
+        <div className="flex-1 space-y-3">
+          <div className="h-4 w-2/5 animate-pulse rounded bg-slate-100" />
+          <div className="h-3 w-full animate-pulse rounded bg-slate-100" />
+          <div className="h-3 w-3/4 animate-pulse rounded bg-slate-100" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function Dashboard() {
   const [memories, setMemories] = useState<Memory[]>([]);
   const [selectedDays, setSelectedDays] = useState<number | undefined>();
@@ -148,7 +163,13 @@ export default function Dashboard() {
                   ))}
                 </div>
               </div>
-              {loading && <p className="text-sm text-slate-500">Loading memories...</p>}
+              {loading && (
+                <div className="grid gap-3">
+                  {[0, 1, 2].map((item) => (
+                    <MemorySkeleton key={item} />
+                  ))}
+                </div>
+              )}
               {error && <p className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>}
               {!loading && !error && memories.length === 0 && (
                 <div className="rounded-3xl border border-dashed border-brand-200 bg-white/70 p-8 text-center">
@@ -156,11 +177,13 @@ export default function Dashboard() {
                   <p className="mt-1 text-sm text-slate-500">Upload a file or paste a note to begin.</p>
                 </div>
               )}
-              <div className="grid gap-3">
-                {memories.map((memory) => (
-                  <MemoryCard key={memory.id} memory={memory} onChanged={() => loadMemories({ markSummaryStale: true })} />
-                ))}
-              </div>
+              {!loading && (
+                <div className="grid gap-3">
+                  {memories.map((memory) => (
+                    <MemoryCard key={memory.id} memory={memory} onChanged={() => loadMemories({ markSummaryStale: true })} />
+                  ))}
+                </div>
+              )}
             </section>
           </section>
           <ChatWindow />

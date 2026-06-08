@@ -7,6 +7,7 @@ import { SearchResult } from "../types";
 export default function SearchBar() {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<SearchResult[]>([]);
+  const [searched, setSearched] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -16,12 +17,14 @@ export default function SearchBar() {
 
     setLoading(true);
     setError("");
+    setSearched(false);
 
     try {
       const response = await api.get<{ results: SearchResult[] }>("/search", {
         params: { query },
       });
       setResults(response.data.results);
+      setSearched(true);
     } catch (err) {
       setError(getApiError(err));
     } finally {
@@ -48,6 +51,11 @@ export default function SearchBar() {
         </button>
       </form>
       {error && <p className="mt-4 rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>}
+      {searched && !loading && results.length === 0 && (
+        <div className="mt-4 rounded-2xl border border-dashed border-brand-200 bg-white/70 p-4 text-sm leading-6 text-slate-500">
+          No strongly relevant memories were found. Try a broader phrase or save more context first.
+        </div>
+      )}
       {results.length > 0 && (
         <div className="mt-4 space-y-3">
           {results.map((result) => (

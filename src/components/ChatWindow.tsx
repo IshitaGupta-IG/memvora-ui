@@ -81,9 +81,13 @@ export default function ChatWindow() {
                   <p className="mb-2 text-xs font-semibold uppercase text-slate-400">Sources</p>
                   <div className="space-y-2">
                     {message.sources.slice(0, 3).map((source) => (
-                      <p key={source.chunk_id} className="rounded-xl bg-slate-50 px-3 py-2 text-xs text-slate-500">
-                        {source.title}
-                      </p>
+                      <div key={source.chunk_id} className="rounded-xl bg-slate-50 px-3 py-2">
+                        <div className="flex items-center justify-between gap-2">
+                          <p className="truncate text-xs font-semibold text-slate-600">{source.title}</p>
+                          <span className="shrink-0 text-[11px] font-medium text-brand-700">{Math.round(source.similarity * 100)}%</span>
+                        </div>
+                        <p className="mt-1 line-clamp-2 text-xs leading-5 text-slate-500">{source.content}</p>
+                      </div>
                     ))}
                   </div>
                 </div>
