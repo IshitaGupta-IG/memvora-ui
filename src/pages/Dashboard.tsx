@@ -99,7 +99,7 @@ export default function Dashboard() {
           </div>
         </section>
 
-        <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_410px]">
+        <div className="grid items-start gap-6 xl:grid-cols-[minmax(0,1fr)_410px]">
           <section className="space-y-6">
             <UploadBox onUploaded={() => loadMemories({ markSummaryStale: true })} />
             <SearchBar />

@@ -50,7 +50,10 @@ export default function ChatWindow() {
   }
 
   return (
-    <section id="ai-chat" className="soft-panel flex h-[760px] scroll-mt-24 flex-col overflow-hidden xl:sticky xl:top-28">
+    <section
+      id="ai-chat"
+      className="soft-panel flex h-[680px] min-h-[540px] w-full scroll-mt-24 flex-col overflow-hidden xl:sticky xl:top-28 xl:h-[calc(100vh-8rem)] xl:max-h-[760px] xl:self-start"
+    >
       <div className="border-b border-white/70 bg-white/80 p-5">
         <div className="flex items-center gap-3">
           <div className="grid h-11 w-11 place-items-center rounded-2xl bg-slate-950 text-brand-200 shadow-lg shadow-brand-600/20">
@@ -71,7 +74,7 @@ export default function ChatWindow() {
                 <Bot size={17} />
               </div>
             )}
-            <div className={`max-w-[82%] rounded-2xl px-4 py-3 text-sm leading-6 ${message.role === "user" ? "bg-slate-950 text-white shadow-lg shadow-brand-700/20" : "bg-white text-slate-700 shadow-sm"}`}>
+            <div className={`min-w-0 max-w-[82%] rounded-2xl px-4 py-3 text-sm leading-6 ${message.role === "user" ? "bg-slate-950 text-white shadow-lg shadow-brand-700/20" : "bg-white text-slate-700 shadow-sm"}`}>
               {message.role === "assistant" ? <FormattedText text={message.content} variant="chat" /> : <p className="whitespace-pre-wrap">{message.content}</p>}
               {message.sources && message.sources.length > 0 && (
                 <div className="mt-3 border-t border-slate-100 pt-3">
@@ -98,7 +101,7 @@ export default function ChatWindow() {
       </div>
 
       <form onSubmit={handleSubmit} className="flex gap-3 border-t border-white/70 bg-white/90 p-4">
-        <input className="input" value={input} onChange={(event) => setInput(event.target.value)} placeholder="What did I upload about React?" />
+        <input className="input min-w-0" value={input} onChange={(event) => setInput(event.target.value)} placeholder="What did I upload about React?" />
         <button className="button-primary shrink-0" disabled={loading}>
           <Send size={17} />
         </button>
