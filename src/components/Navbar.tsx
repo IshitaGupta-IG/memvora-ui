@@ -7,14 +7,14 @@ export default function Navbar() {
   const displayName = user?.email || "Guest session";
 
   return (
-    <header className="sticky top-0 z-30 border-b border-white/70 bg-white/75 backdrop-blur-xl">
-      <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-4 lg:px-6">
+    <header className="sticky top-0 z-30 border-b border-white/70 bg-white/85 backdrop-blur-xl">
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-3 sm:h-20 sm:px-4 lg:px-6">
         <div className="flex items-center gap-3">
-          <div className="grid h-11 w-11 place-items-center rounded-2xl bg-slate-950 text-brand-200 shadow-lg shadow-brand-600/20">
+          <div className="grid h-10 w-10 place-items-center rounded-2xl bg-slate-950 text-brand-200 shadow-lg shadow-brand-600/20 sm:h-11 sm:w-11">
             <Brain size={21} />
           </div>
           <div>
-            <p className="text-xl font-black text-slate-950">Memvora</p>
+            <p className="text-lg font-black text-slate-950 sm:text-xl">Memvora</p>
             <p className="text-xs font-medium text-brand-700">Your AI Memory Vault</p>
           </div>
         </div>

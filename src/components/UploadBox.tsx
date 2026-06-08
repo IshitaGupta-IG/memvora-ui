@@ -74,7 +74,7 @@ export default function UploadBox({ onUploaded }: { onUploaded: () => void }) {
   }
 
   return (
-    <section id="upload" className="soft-panel scroll-mt-24 p-6" onPaste={handlePaste}>
+    <section id="upload" className="soft-panel scroll-mt-20 p-4 sm:scroll-mt-24 sm:p-6" onPaste={handlePaste}>
       <div className="mb-5 flex items-center gap-3">
         <div className="grid h-11 w-11 place-items-center rounded-2xl bg-slate-950 text-brand-200 shadow-lg shadow-brand-600/20">
           <UploadCloud size={21} />
@@ -106,11 +106,11 @@ export default function UploadBox({ onUploaded }: { onUploaded: () => void }) {
           value={note}
           onChange={(event) => setNote(event.target.value)}
         />
-        <label className="flex cursor-pointer items-center justify-between rounded-3xl border border-dashed border-brand-200 bg-white/70 px-4 py-4 transition hover:border-brand-500 hover:bg-brand-50">
-          <div className="flex items-center gap-3">
+        <label className="flex cursor-pointer items-center justify-between gap-3 rounded-2xl border border-dashed border-brand-200 bg-white/70 px-4 py-4 transition hover:border-brand-500 hover:bg-brand-50 sm:rounded-3xl">
+          <div className="flex min-w-0 items-center gap-3">
             <FileText className="text-brand-600" size={22} />
-            <div>
-              <p className="text-sm font-medium text-slate-700">{file ? file.name : "Choose PDF, TXT, Markdown, or image"}</p>
+            <div className="min-w-0">
+              <p className="truncate text-sm font-medium text-slate-700">{file ? file.name : "Choose PDF, TXT, Markdown, or image"}</p>
               <p className="text-xs text-slate-500">Paste a screenshot into this panel or choose PNG, JPG, or WebP</p>
             </div>
           </div>
@@ -123,9 +123,9 @@ export default function UploadBox({ onUploaded }: { onUploaded: () => void }) {
           />
         </label>
         {previewUrl && (
-          <div className="rounded-3xl border border-slate-200 bg-white p-3">
-            <div className="flex items-center gap-3">
-              <img className="h-24 w-32 rounded-2xl border border-slate-100 bg-slate-950 object-contain" src={previewUrl} alt="Attached screenshot preview" />
+          <div className="rounded-2xl border border-slate-200 bg-white p-3 sm:rounded-3xl">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+              <img className="h-40 w-full rounded-2xl border border-slate-100 bg-slate-950 object-contain sm:h-24 sm:w-32" src={previewUrl} alt="Attached screenshot preview" />
               <div className="min-w-0">
                 <p className="truncate text-sm font-semibold text-slate-800">Screenshot attached</p>
                 <p className="mt-1 text-xs leading-5 text-slate-500">This preview will be saved with the memory when the image is within the storage limit.</p>
@@ -135,7 +135,7 @@ export default function UploadBox({ onUploaded }: { onUploaded: () => void }) {
         )}
         {error && <p className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>}
         {message && <p className="rounded-xl bg-emerald-50 px-4 py-3 text-sm text-emerald-700">{message}</p>}
-        <button className="button-primary" disabled={loading}>
+        <button className="button-primary w-full sm:w-auto" disabled={loading}>
           {loading ? "Saving memory..." : "Save memory"}
         </button>
       </form>

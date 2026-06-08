@@ -1,8 +1,8 @@
 # Memvora UI
 
-Memvora is an AI-powered memory vault for saving, searching, and reasoning over personal context. The frontend is a polished React application that lets users capture memories from notes, links, files, and screenshots, then use AI chat and summaries to retrieve what matters later.
+Memvora is an AI-powered memory vault for saving, searching, and reasoning over personal context. The frontend is a polished React application that lets users capture memories from notes, links, files, and screenshots, then use AI Chat and summaries to retrieve what matters later.
 
-This UI is designed to feel like a real product: fast onboarding, guest access, screenshot paste support, compact memory browsing, grounded AI chat, and a clean desktop/mobile experience.
+This UI is designed to feel like a real product: fast onboarding, guest access, screenshot paste support, compact memory browsing, grounded AI Chat, lazy memory detail loading, and a mobile-first desktop/mobile experience.
 
 ## Product Capabilities
 
@@ -12,13 +12,14 @@ This UI is designed to feel like a real product: fast onboarding, guest access, 
 - Paste screenshots directly into the upload panel.
 - Upload PNG, JPG/JPEG, and WebP images.
 - View recent uploads in a compact accordion-style memory list.
-- Expand a memory to inspect extracted text, OCR output, or saved link context.
+- Expand a memory to lazy-load and inspect extracted text, OCR output, or saved link context.
 - Reopen saved screenshot previews from expanded memories when the backend has stored `image_data_url`.
 - Open screenshots in a full-screen viewer with a close button.
 - Edit and delete memories from the UI.
 - Filter uploads by all time, last 1 week, last 2 weeks, and last 1 month.
-- Ask questions through a bottom-right floating AI chatbox on desktop.
-- Use a mobile-friendly chat layout on smaller screens.
+- Ask questions and search memories through AI Chat.
+- Use a bottom-right floating AI chatbox on desktop.
+- Use a bottom-sheet mobile chat layout on smaller screens.
 - See grounded AI sources when chat answers are based on saved memories.
 - Generate a formatted Thoughts Summary with themes, details, open questions, and next actions.
 - Re-summarize after new memories are added.
@@ -46,9 +47,10 @@ Memvora's frontend is organized around daily capture and retrieval:
 2. The dashboard opens directly into the memory workspace.
 3. The upload panel accepts notes, files, links, or pasted screenshots.
 4. Recent uploads stay compact by default and expand only when needed.
-5. Screenshot memories display thumbnails when the backend has stored the image preview.
-6. The chatbox sits collapsed at the bottom-right on desktop, keeping the workspace uncluttered.
-7. AI answers include source context, helping the user trust where the answer came from.
+5. Full memory content and screenshot previews load only when a memory is opened, keeping dashboard API responses fast.
+6. Screenshot memories display previews when the backend has stored the image data.
+7. The chatbox sits collapsed at the bottom-right on desktop and becomes a bottom sheet on mobile.
+8. AI answers include source context, helping the user trust where the answer came from.
 
 ## Environment Variables
 
@@ -98,12 +100,14 @@ The frontend expects the backend to provide:
 
 - `GET /me`
 - `GET /memories`
+- `GET /memories/{memory_id}`
 - `POST /upload`
 - `PUT /memories/{memory_id}`
 - `DELETE /memories/{memory_id}`
-- `GET /search`
 - `POST /chat`
 - `POST /summary`
+
+`GET /search` may still exist on the backend for API-level retrieval, but the UI uses AI Chat as the primary search and ask workflow.
 
 Screenshot previews depend on this optional memory field:
 
@@ -156,6 +160,8 @@ Deployment checklist:
 
 - Screenshot full-screen preview works for screenshots saved after the backend/database image-preview update.
 - Older screenshots remain searchable by OCR/fallback text but cannot show the original image because it was not previously stored.
+- Memory cards lazy-load details before expanding, editing, or opening a saved screenshot preview.
+- The standalone Semantic Search panel has been removed; AI Chat is the single retrieval workflow.
 - Guest sessions are useful for demos, but signed-in accounts are better for durable personal memory.
 - AI provider failures are surfaced as friendly messages rather than browser alerts.
 

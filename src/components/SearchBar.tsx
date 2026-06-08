@@ -33,7 +33,7 @@ export default function SearchBar() {
   }
 
   return (
-    <section id="search" className="soft-panel scroll-mt-24 p-6">
+    <section id="search" className="soft-panel scroll-mt-20 p-4 sm:scroll-mt-24 sm:p-6">
       <div className="mb-4 flex items-center gap-3">
         <div className="grid h-11 w-11 place-items-center rounded-2xl bg-slate-950 text-brand-200 shadow-lg shadow-brand-600/20">
           <Search size={20} />
@@ -45,7 +45,7 @@ export default function SearchBar() {
       </div>
       <form onSubmit={handleSearch} className="flex flex-col gap-3 sm:flex-row">
         <input className="input" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search memories, ideas, links, or screenshots..." />
-        <button className="button-secondary shrink-0" disabled={loading}>
+        <button className="button-secondary w-full shrink-0 sm:w-auto" disabled={loading}>
           <Search size={17} />
           {loading ? "Searching..." : "Search"}
         </button>
@@ -59,7 +59,7 @@ export default function SearchBar() {
       {results.length > 0 && (
         <div className="mt-4 space-y-3">
           {results.map((result) => (
-            <article key={result.chunk_id} className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+            <article key={result.chunk_id} className="rounded-2xl border border-slate-200 bg-slate-50 p-3 sm:p-4">
               <div className="mb-2 flex items-center justify-between gap-3">
                 <h3 className="font-semibold text-slate-800">{result.title}</h3>
                 <span className="rounded-full bg-brand-50 px-3 py-1 text-xs font-medium text-brand-700">
