@@ -44,7 +44,7 @@ export default function SearchBar() {
         </div>
       </div>
       <form onSubmit={handleSearch} className="flex flex-col gap-3 sm:flex-row">
-        <input className="input" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search React, AWS, vector databases..." />
+        <input className="input" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search memories, ideas, links, or screenshots..." />
         <button className="button-secondary shrink-0" disabled={loading}>
           <Search size={17} />
           {loading ? "Searching..." : "Search"}

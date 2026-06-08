@@ -10,7 +10,7 @@ export default function ChatWindow() {
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       role: "assistant",
-      content: "Ask me what you remember about React, deployments, AI notes, or anything you have saved.",
+      content: "Ask me what you saved recently, which ideas kept coming back, or what themes showed up in your memories.",
     },
   ]);
   const [input, setInput] = useState("");
@@ -123,7 +123,7 @@ export default function ChatWindow() {
       </div>
 
       <form onSubmit={handleSubmit} className="flex gap-3 border-t border-white/70 bg-white/90 p-4">
-        <input className="input min-w-0" value={input} onChange={(event) => setInput(event.target.value)} placeholder="What did I upload about React?" />
+        <input className="input min-w-0" value={input} onChange={(event) => setInput(event.target.value)} placeholder="What did I save in the last 30 days?" />
         <button className="button-primary shrink-0" disabled={loading}>
           <Send size={17} />
         </button>

@@ -89,7 +89,7 @@ export default function UploadBox({ onUploaded }: { onUploaded: () => void }) {
       </p>
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        <input className="input" placeholder="Title, like AWS deployment notes" value={title} onChange={(event) => setTitle(event.target.value)} />
+        <input className="input" placeholder="Title, like ideas from today's notes" value={title} onChange={(event) => setTitle(event.target.value)} />
         <div className="relative">
           <Link className="pointer-events-none absolute left-5 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
           <input
